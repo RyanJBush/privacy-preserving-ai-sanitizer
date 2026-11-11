@@ -27,8 +27,14 @@ class ReadmeMatchesReports(unittest.TestCase):
 
     def test_required_documents_exist(self):
         for name in ("README.md", "WALKTHROUGH.md", "requirements-presidio.txt", "config/frozen_config.json",
-                     ".github/workflows/ci.yml", "docs/handoff/EVALUATION_CONTRACT.md"):
+                     ".github/workflows/ci.yml", "docs/handoff/EVALUATION_CONTRACT.md", ".gitattributes"):
             self.assertTrue((R / name).is_file(), name)
+        self.assertEqual((R / ".gitattributes").read_text(encoding="utf-8").splitlines()[-1], "* -text")
+        readme = (R / "README.md").read_text(encoding="utf-8")
+        self.assertIn("actions/runs/42962482672", readme)       # the passing hosted run is linked
+        self.assertIn("02169e0cda9d454a1985947fcd124d1ed540a14c", readme)  # and its tested commit named
+        self.assertNotIn("PENDING", readme)
+        self.assertNotIn("has not run", readme)
 
 
 class WorkflowKeepsItsGuarantees(unittest.TestCase):
@@ -38,7 +44,7 @@ class WorkflowKeepsItsGuarantees(unittest.TestCase):
     def test_structure_by_text(self):
         for needle in ("baseline:", "candidate:", 'REQUIRE_CANDIDATE_TESTS: "1"', "pip check",
                        "scripts/run_tests_no_skips.py", "requirements-presidio.txt", r"C:\pv",
-                       "scripts/check_reports.py baseline presidio", "PENDING"):
+                       "scripts/check_reports.py baseline presidio", "02169e0"):
             self.assertIn(needle, self.text)
 
     @unittest.skipUnless(importlib.util.find_spec("yaml"), "PyYAML not installed (candidate environment has it)")

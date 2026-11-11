@@ -12,14 +12,14 @@ the final ZIP, both from the same source revision.
 and reproduce the tests and evaluation with the commands in section 6. Please mark independently executed versus
 Claude-reported evidence separately.
 
-Not done and not claimed: hosted CI (**PENDING**, no run was executed), any platform other than Windows 11,
+Not done and not claimed: any platform other than Windows 11 locally and one hosted `windows-latest` runner,
 gateway integration / retries / fallbacks (**OUT OF SCOPE**), real-provider calls (none), blinded external
 evaluation (this is a procedural freeze). Elapsed effort was not measured by me and is not reported.
 
 ## 2. Summary of results
 
 
-- Tests: **baseline interpreter** (stdlib only): OK (skipped=4); discovered Ran 132 tests in 3.833s. The skipped entries are 4 whole candidate test classes that need Presidio. **Candidate environment, fresh venv, no skips allowed**: ran=154 failures=0 errors=0 skipped=0.
+- Tests: **baseline interpreter** (stdlib only): OK (skipped=4); discovered Ran 132 tests in 3.784s. The skipped entries are 4 whole candidate test classes that need Presidio. **Candidate environment, fresh venv, no skips allowed**: ran=154 failures=0 errors=0 skipped=0.
 
 - Fresh-environment checks (same OS only): `pip check` rc=0; `pip freeze` equals the lock file: **True**; candidate development evaluation byte-identical on rerun: **True**; project files in the extracted ZIP byte-identical to the source tree: **True**.
 
@@ -78,103 +78,93 @@ Frozen candidate thresholds (selected on development only): EMAIL_ADDRESS 1.0, P
   labels, on a small template set). The candidate's held-out misses are one `.invalid`-suffix email (offline suffix
   validator) and one email whose span started at a `key=` prefix (exact-span FP + FN, though fully covered).
 
-## 2a. Revision 2: documentation-only correction
+## 2a. Revision 3: hosted-CI evidence update (documentation only)
 
-Requested change: replace the README's mixed Bash/Windows input examples with commands that work in PowerShell,
-label each block with its actual shell, run the exact replacement examples, and clarify the evaluation history.
-Detector code, thresholds, fixtures and measured results are fixed.
+The project was published to a private GitHub repository and hosted CI ran. This revision (1) replaces the stale
+"hosted CI pending / not run" statements with the observed results, linking the passing run and naming the tested
+commit; (2) adds the `.gitattributes` file that the CI fix added to the repository; (3) records hosted versus local
+test counts; (4) regenerates the manifest. Detector code, thresholds, fixtures and reports are unchanged
+(byte-identical to the previous final ZIP; see the file list below).
 
-- Files that differ from the previous final ZIP (excluding this packet): **README.md**; added: none; removed: none.
-- README changes: (a) every command block is labelled `powershell` and is PowerShell syntax (`$PV`, the call operator `&`, a quoted string piped into `python`); (b) the Bash `printf ... |` examples are gone; (c) a documented exact-bytes form (write a file, then `cmd /c ... < input.txt`) for input without PowerShell's trailing line break; (d) a Windows PowerShell 5.1 vs PowerShell 7 input-encoding note; (e) the evaluation-history paragraph now says: no held-out retuning occurred, and later runs were deterministic verification reruns that reproduced the committed reports byte for byte.
-- The README blocks were extracted programmatically and run UNMODIFIED except for the single `$PV = "C:\pv"` line, which was pointed at the existing fresh venv built from `requirements-presidio.txt` (the drive root was not written to). Both shells ran from the project root.
-- Encoding behavior observed separately: PowerShell 7 pipes `Café ava@example.com` as UTF-8 plus a CRLF; Windows PowerShell 5.1 pipes `Caf? ava@example.com` plus CRLF (non-ASCII becomes `?`); the file + `cmd /c <` form sends UTF-8 with no trailing break in both, and the sanitizer returned `Café [EMAIL_ADDRESS]` in both.
-- Measured results are unchanged: all four reports were byte-identical before and after running the README blocks in each shell.
+- Files that differ from the previous final ZIP (excluding this packet): **.github/workflows/ci.yml, README.md, WALKTHROUGH.md, tests/test_docs.py**; added: **.gitattributes**; removed: none. Everything else, including `sanitizer/`, `config/frozen_config.json`, `fixtures/` and `reports/`, is byte-identical to the previous final ZIP.
+- The only test file touched is `tests/test_docs.py`: it no longer expects the word PENDING in the workflow comment, and it now also asserts that the README links the passing run, names its tested commit, and no longer says hosted CI is pending or has not run. The number of tests is unchanged (132 discovered in the base interpreter, 154 in the candidate environment).
+- The repository is **private**. Run links need repository access.
 
-README diff against the previous final ZIP:
+### Hosted CI (observed with the GitHub CLI; logs read from the runs)
 
-````diff
---- a/README.md
-+++ b/README.md
-@@ -40,28 +40,46 @@
- network (PyPI and one GitHub release asset); the tested inference path does not (see
- [Dependency notes](#dependency-notes)).
- 
-+All commands below are **PowerShell** (Windows PowerShell 5.1 and PowerShell 7 both work) and are run from the
-+project root. `evaluate` writes `reports/<split>_<detector>.json`; re-running it overwrites the committed report
-+with identical bytes.
-+
- Baseline only (no installs):
- 
--```bash
-+```powershell
- python -m unittest discover -v
--printf 'Email ava@example.com; phone (415) 555-0132; customer CUST-004271.' | python -m sanitizer run --request-id demo-001
--python -m sanitizer demo                      # explicit SYNTHETIC inspection
-+'Email ava@example.com; phone (415) 555-0132; customer CUST-004271.' | python -m sanitizer run --request-id demo-001
-+python -m sanitizer demo                                              # explicit SYNTHETIC inspection
- python -m sanitizer evaluate --detector baseline --split development
- python -m sanitizer evaluate --detector baseline --split heldout      # requires config/frozen_config.json
- ```
- 
-+PowerShell appends a line break (`\r\n`) to a string it pipes into a program. The sanitizer does not normalize
-+whitespace, so the piped example above returns text ending in `\r\n`. To send exact bytes with no trailing line
-+break, write the input to a file and redirect it through `cmd` (PowerShell has no `<` operator):
-+
-+```powershell
-+[System.IO.File]::WriteAllText((Join-Path $PWD "input.txt"), "Email ava@example.com; phone (415) 555-0132; customer CUST-004271.", (New-Object System.Text.UTF8Encoding $false))
-+cmd /c "python -m sanitizer run --request-id demo-001 < input.txt"
-+Remove-Item input.txt
-+```
-+
-+Use ASCII text when piping from Windows PowerShell 5.1: its default pipe encoding is ASCII, which turns other
-+characters into `?` before the sanitizer sees them. The file form above sends UTF-8 in both versions.
-+
- Candidate (use a **short** venv path on Windows; a deep path made spaCy fail to load a DLL):
- 
--```bash
--python -m venv C:\pv
--C:\pv\Scripts\python -m pip install -r requirements-presidio.txt
--C:\pv\Scripts\python -m pip check
--C:\pv\Scripts\python scripts/run_tests_no_skips.py                    # fails if any test is skipped
--printf 'Email ava@example.com; phone (415) 555-0132; customer CUST-004271.' | C:\pv\Scripts\python -m sanitizer run --detector presidio --summary --request-id demo-001
--C:\pv\Scripts\python -m sanitizer demo --detector presidio
--C:\pv\Scripts\python -m sanitizer evaluate --detector presidio --split development
--C:\pv\Scripts\python -m sanitizer evaluate --detector presidio --split heldout
--C:\pv\Scripts\python scripts/check_reports.py baseline presidio       # deterministic rerun check
-+```powershell
-+$PV = "C:\pv"          # any SHORT path
-+python -m venv $PV
-+& "$PV\Scripts\python" -m pip install -r requirements-presidio.txt
-+& "$PV\Scripts\python" -m pip check
-+& "$PV\Scripts\python" scripts/run_tests_no_skips.py                  # fails if any test is skipped
-+'Email ava@example.com; phone (415) 555-0132; customer CUST-004271.' | & "$PV\Scripts\python" -m sanitizer run --detector presidio --summary --request-id demo-001
-+& "$PV\Scripts\python" -m sanitizer demo --detector presidio
-+& "$PV\Scripts\python" -m sanitizer evaluate --detector presidio --split development
-+& "$PV\Scripts\python" -m sanitizer evaluate --detector presidio --split heldout
-+& "$PV\Scripts\python" scripts/check_reports.py baseline presidio     # deterministic rerun check
- ```
- 
- CLI output: `run` prints the provider payload `{"request_id", "text"}` as one JSON line. `--summary` prints
-@@ -84,9 +102,13 @@
-    saved with recognizer settings, package/model versions and file hashes in
-    [config/frozen_config.json](config/frozen_config.json). `heldout.json` was only hashed (bytes) before that file
-    was written. **This is a procedural freeze, not a blinded external evaluation.**
--3. Both detectors then ran once on the held-out file with the frozen configuration. Nothing was retuned or
--   rerun after seeing the output, and no implementation change followed it, so these are the first-run held-out
--   results (still a tiny synthetic split). The held-out command refuses to run without the frozen config.
-+3. Both detectors then ran on the held-out file with the frozen configuration; those runs produced the committed
-+   reports. **No held-out retuning occurred:** thresholds, recognizer settings, pipeline code and fixtures did not
-+   change afterwards. Later runs were **deterministic verification reruns** (a fresh-environment evaluation,
-+   `scripts/check_reports.py`, and a reviewer's reproduction of the baseline reports). They used the same frozen
-+   configuration and code and reproduced the committed reports byte for byte (the interpreter patch version is the
-+   only field the check ignores). The results are still a tiny synthetic split. The held-out command refuses to run
-+   without the frozen config.
- 
- ## Results
- 
+**Passing run**: https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/runs/42962482672
+- commit `02169e0cda9d454a1985947fcd124d1ed540a14c`, event `push`, started 2026-11-11T04:56:44Z, conclusion **success**, runner `windows-latest`, Python 3.13.17
+- jobs: baseline (stdlib only) = success; candidate (Presidio + en_core_web_sm) = success
+
+baseline (stdlib only):
+````
+Ran 132 tests in 3.702s
+OK (skipped=5)
+baseline  development  rerun matches committed report: True
+baseline  heldout      rerun matches committed report: True
 ````
 
-Observed output of the README blocks, PowerShell 7.6.9:
+candidate (Presidio + en_core_web_sm):
+````
+No broken requirements found.
+ran=154 failures=0 errors=0 skipped=0
+Ran 154 tests in 11.312s
+OK
+baseline  development  rerun matches committed report: True
+baseline  heldout      rerun matches committed report: True
+presidio  development  rerun matches committed report: True
+presidio  heldout      rerun matches committed report: True
+````
+
+
+**Earlier failing run (first commit, before the line-ending fix)**: https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/runs/42962280122
+- commit `add4bdb424100a08f3640a76f2fd57392406a0f1`, event `push`, started 2026-11-11T04:54:47Z, conclusion **failure**, runner `windows-latest`, Python 3.13.17
+- jobs: baseline (stdlib only) = failure; candidate (Presidio + en_core_web_sm) = failure
+
+baseline (stdlib only):
+````
+ERROR: test_hashes_match_the_handoff_fixtures_and_files_on_disk (tests.test_frozen_config.FrozenConfig.test_hashes_match_the_handoff_fixtures_and_files_on_disk)
+ERROR: test_mismatched_or_missing_fixture_bytes_are_rejected (tests.test_frozen_config.FrozenConfig.test_mismatched_or_missing_fixture_bytes_are_rejected)
+FAIL: test_fixtures_are_the_unchanged_handoff_files (tests.test_scoring.FixtureLoading.test_fixtures_are_the_unchanged_handoff_files)
+Ran 132 tests in 3.371s
+FAILED (failures=1, errors=2, skipped=5)
+````
+
+candidate (Presidio + en_core_web_sm):
+````
+No broken requirements found.
+ran=154 failures=2 errors=2 skipped=0
+ERROR: test_hashes_match_the_handoff_fixtures_and_files_on_disk (tests.test_frozen_config.FrozenConfig.test_hashes_match_the_handoff_fixtures_and_files_on_disk)
+ERROR: test_mismatched_or_missing_fixture_bytes_are_rejected (tests.test_frozen_config.FrozenConfig.test_mismatched_or_missing_fixture_bytes_are_rejected)
+FAIL: test_candidate_development_evaluation_is_deterministic (tests.test_cli.CandidateCli.test_candidate_development_evaluation_is_deterministic)
+FAIL: test_fixtures_are_the_unchanged_handoff_files (tests.test_scoring.FixtureLoading.test_fixtures_are_the_unchanged_handoff_files)
+Ran 154 tests in 5.746s
+FAILED (failures=2, errors=2)
+````
+
+
+Cause of the earlier failure: the Windows runner checked files out with CRLF line endings, so the SHA-256 of the byte-verified fixtures changed (observed for `fixtures/development.json`: the CRLF form hashes to the value the runner reported). The fix commit `02169e0` changed only these files (`git diff --name-status add4bdb 02169e0`):
+
+````
+A	.gitattributes
+````
+
+### Hosted versus local test counts (same code, tested commit `02169e0`)
+
+| | Hosted run (Python 3.13.17) | Local, this packet's fresh extraction (Python 3.13.7) |
+|---|---|---|
+| Baseline / base interpreter | 132 run, 127 passed, **5 skipped**, 0 failed | 132 run, 128 passed, **4 skipped**, 0 failed |
+| Candidate / candidate venv | 154 run, 154 passed, **0 skipped**, 0 failed | 154 run, 154 passed, **0 skipped**, 0 failed |
+
+The 5th hosted baseline skip is `tests.test_docs...test_structure_by_yaml` (the hosted base Python has no PyYAML; the local base interpreter does). The other 4 skips are whole candidate test classes (Presidio not installed). A skipped class counts as one skipped entry, so the skip count understates how many candidate tests were not exercised in the baseline job. The candidate job runs them all with zero skips.
+
+### Revision-2 evidence that still applies (README PowerShell blocks)
+
+The README's PowerShell command blocks are unchanged in this revision (see the README diff below). They were extracted and run unmodified, except for the `$PV` path line, in both shells, in the previous revision; the observed output was:
+
+Encoding behavior observed then: PowerShell 7 pipes UTF-8 plus CRLF; Windows PowerShell 5.1 pipes non-ASCII as `?` plus CRLF; the file + `cmd /c <` form sends UTF-8 with no trailing break in both.
+
+PowerShell 7.6.9:
 
 ````
 shell: pwsh | blocks run: 3 | reports unchanged afterwards: True | input.txt left behind: False
@@ -232,7 +222,7 @@ Ran 154 tests in 10.474s
 OK
 ````
 
-Observed output of the README blocks, Windows PowerShell 5.1.26100:
+Windows PowerShell 5.1.26100:
 
 ````
 shell: powershell | blocks run: 3 | reports unchanged afterwards: True | input.txt left behind: False
@@ -290,6 +280,64 @@ Ran 154 tests in 9.358s
 OK
 ````
 
+README diff against the previous final ZIP (this revision):
+
+````diff
+--- a/README.md
++++ b/README.md
+@@ -36,7 +36,7 @@
+ 
+ ## Setup, demo, evaluation (exact commands)
+ 
+-Tested on **Windows 11, Python 3.13.7, one machine**. Other platforms are untested. Installation uses the
++Tested locally on **Windows 11, Python 3.13.7, one machine**, and on one hosted Windows runner (`windows-latest`, Python 3.13.17; see [CI](#ci)). Other platforms are untested. Installation uses the
+ network (PyPI and one GitHub release asset); the tested inference path does not (see
+ [Dependency notes](#dependency-notes)).
+ 
+@@ -210,15 +210,36 @@
+ 
+ Tiny synthetic fixtures, three entity types, one narrow phone syntax, ASCII-shaped emails, English only, no
+ statistical claims, thresholds chosen on 10 examples (the frozen phone threshold equals the recognizer's base
+-score, so it has no margin), PHONE_NUMBER's position in the tie-break order is an agreed assumption. Hosted CI has
+-not run (see below). Gateway integration, retries/fallbacks and real-provider behavior are out of scope and were
+-not tested.
++score, so it has no margin), PHONE_NUMBER's position in the tie-break order is an agreed assumption. Only one
++hosted platform (Windows, Python 3.13.17) and one local machine have been exercised. Gateway integration,
++retries/fallbacks and real-provider behavior are out of scope and were not tested.
+ 
+ ## CI
+ 
+ [.github/workflows/ci.yml](.github/workflows/ci.yml) defines a baseline job and a candidate job (the candidate
+-job sets `REQUIRE_CANDIDATE_TESTS=1`, fails if dependencies are absent and fails on any skipped test). **Hosted
+-CI status: PENDING** (no hosted run was executed). The same commands were run locally; see the review packet.
++job sets `REQUIRE_CANDIDATE_TESTS=1`, fails if dependencies are absent and fails on any skipped test).
++
++**Hosted CI status: passed.** [Run 42962482672](https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/runs/42962482672) on `windows-latest` (Python 3.13.17) tested commit
++`02169e0cda9d454a1985947fcd124d1ed540a14c`, and both jobs succeeded. The repository is private, so these links need
++repository access.
++
++| | Hosted run (commit `02169e0`) | Local (Windows 11, Python 3.13.7) |
++|---|---|---|
++| Baseline job / base interpreter | 132 tests run, 127 passed, **5 skipped**, 0 failed | 132 run, 128 passed, **4 skipped**, 0 failed |
++| Candidate job / candidate venv | 154 run, **0 skipped**, 0 failed | 154 run, **0 skipped**, 0 failed |
++| Deterministic rerun vs committed reports | baseline: matched (development, held-out); candidate: matched for both detectors | matched for both detectors |
++
++The baseline job skips candidate tests because Presidio is not installed there. Each of 4 skipped entries is a whole
++candidate test class; the hosted run has one more skip than the local run because its base Python has no PyYAML,
++which skips the workflow-YAML structure test (the local base interpreter has PyYAML). The skips are not candidate
++verification; the candidate job is the one that exercises them, with zero skips.
++
++An earlier run on the first commit `add4bdb` ([run 42962280122](https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/runs/42962280122)) **failed**: the runner checked files
++out with CRLF line endings, which changed the SHA-256 of the byte-verified fixtures (observed for `fixtures/development.json`: the CRLF
++form hashes to the value the runner reported), so the byte-hash integrity checks failed (baseline: 1 failure, 2 errors; candidate: 2 failures, 2 errors). The fix commit
++`02169e0` adds only `.gitattributes` (`* -text`, no line-ending conversion). No detector code, thresholds,
++fixtures, reports or tests changed, and nothing was retuned against held-out data. Later documentation-only
++commits trigger further runs; see the repository's Actions tab.
+ 
+ ## Repository layout
+ 
+````
+
 
 ## 3. Handoff checklist (START_HERE steps 1-10)
 
@@ -302,7 +350,7 @@ OK
 | 5 | CLI for both detectors; counts without raw values; provider object exactly `{request_id, text}`; fixed error-only stderr; init failure = fixed code, zero dispatch, no fallback | Done (`run --detector baseline|presidio [--summary] [--config]`). Default behavior unchanged. Missing dependency / init failure / bad config tests (in-process, real process, with canaries in the exception). |
 | 6 | Explicit synthetic `demo` | Done (F4, F14): canary, benign, Unicode, repeated, CRLF/tab, detector failure with zero calls, actual held-out miss and unnecessary redaction. No user-text path, no real-provider route. |
 | 7 | Provider-boundary and logging tests for both detectors; phone canary; type-priority ties; missing-dependency CLI; no production failure-injection switch | Done: `tests/test_detectors_boundary.py`, `tests/test_pipeline.py`, `tests/test_cli.py`. Accuracy and boundary results are reported separately. No injection switch exists in `sanitizer/`. |
-| 8 | GitHub Actions for baseline and candidate; candidate fails on missing deps or skips; run equivalent commands locally; fresh env following README | Workflow written. Equivalent commands run locally in a fresh venv (F9-F17). **Hosted CI: PENDING.** The README uses `C:\pv`; the fresh run used an equivalent short path inside the session folder (it did not write to the drive root). |
+| 8 | GitHub Actions for baseline and candidate; candidate fails on missing deps or skips; run equivalent commands locally; fresh env following README | Workflow written. Equivalent commands run locally in a fresh venv (F9-F17). **Hosted CI: passed on one Windows runner (section 2a).** The README uses `C:\pv`; the fresh run used an equivalent short path inside the session folder (it did not write to the drive root). |
 | 9 | README rewrite, WALKTHROUGH.md, modest resume bullets from measured results | Done. README results block is generated from the reports and checked by a test. |
 | 10 | Final ZIP and ONE packet from the same revision; regenerated hashes; diff or "all files new" | Done. No git repository exists here, so section 4 is a diff against the previous exported ZIP. Manifest in section 11. |
 
@@ -310,7 +358,7 @@ OK
 
 **Modified since the previous export:** `README.md`, `sanitizer/cli.py`, `sanitizer/core.py`, `sanitizer/fixture.py`, `sanitizer/presidio_check.py`, `sanitizer/presidio_detector.py`, `tests/test_presidio_optional.py`, `tests/test_sanitizer.py`.
 
-**New files:** `.github/workflows/ci.yml`, `.gitignore`, `WALKTHROUGH.md`, `config/frozen_config.json`, `docs/handoff/EVALUATION_CONTRACT.md`, `docs/handoff/MANIFEST.json`, `docs/handoff/START_HERE.md`, `docs/handoff/fixture_summary.json`, `fixtures/development.json`, `fixtures/fixture_summary.json`, `fixtures/heldout.json`, `reports/SUMMARY.md`, `reports/development_baseline.json`, `reports/development_presidio.json`, `reports/heldout_baseline.json`, `reports/heldout_presidio.json`, `sanitizer/config.py`, `sanitizer/demo.py`, `sanitizer/detectors.py`, `sanitizer/evaluation.py`, `sanitizer/freeze.py`, `scripts/check_reports.py`, `scripts/render_summary.py`, `scripts/run_tests_no_skips.py`, `tests/support.py`, `tests/test_cli.py`, `tests/test_detectors_boundary.py`, `tests/test_docs.py`, `tests/test_frozen_config.py`, `tests/test_pipeline.py`, `tests/test_scoring.py`.
+**New files:** `.gitattributes`, `.github/workflows/ci.yml`, `.gitignore`, `WALKTHROUGH.md`, `config/frozen_config.json`, `docs/handoff/EVALUATION_CONTRACT.md`, `docs/handoff/MANIFEST.json`, `docs/handoff/START_HERE.md`, `docs/handoff/fixture_summary.json`, `fixtures/development.json`, `fixtures/fixture_summary.json`, `fixtures/heldout.json`, `reports/SUMMARY.md`, `reports/development_baseline.json`, `reports/development_presidio.json`, `reports/heldout_baseline.json`, `reports/heldout_presidio.json`, `sanitizer/config.py`, `sanitizer/demo.py`, `sanitizer/detectors.py`, `sanitizer/evaluation.py`, `sanitizer/freeze.py`, `scripts/check_reports.py`, `scripts/render_summary.py`, `scripts/run_tests_no_skips.py`, `tests/support.py`, `tests/test_cli.py`, `tests/test_detectors_boundary.py`, `tests/test_docs.py`, `tests/test_frozen_config.py`, `tests/test_pipeline.py`, `tests/test_scoring.py`.
 
 **Removed from the project root:** previous exports and diff files (none).
 
@@ -319,7 +367,7 @@ Unified diff of the modified files against the previous exported ZIP (`a/` previ
 ````diff
 --- a/README.md
 +++ b/README.md
-@@ -1,79 +1,244 @@
+@@ -1,79 +1,265 @@
 -# Baseline sanitizer (milestone 1)
 -
 -Stdlib-only. Python 3.13.7 was used; older versions are untested.
@@ -410,7 +458,7 @@ Unified diff of the modified files against the previous exported ZIP (`a/` previ
 +
 +## Setup, demo, evaluation (exact commands)
 +
-+Tested on **Windows 11, Python 3.13.7, one machine**. Other platforms are untested. Installation uses the
++Tested locally on **Windows 11, Python 3.13.7, one machine**, and on one hosted Windows runner (`windows-latest`, Python 3.13.17; see [CI](#ci)). Other platforms are untested. Installation uses the
 +network (PyPI and one GitHub release asset); the tested inference path does not (see
 +[Dependency notes](#dependency-notes)).
 +
@@ -584,15 +632,36 @@ Unified diff of the modified files against the previous exported ZIP (`a/` previ
 +
 +Tiny synthetic fixtures, three entity types, one narrow phone syntax, ASCII-shaped emails, English only, no
 +statistical claims, thresholds chosen on 10 examples (the frozen phone threshold equals the recognizer's base
-+score, so it has no margin), PHONE_NUMBER's position in the tie-break order is an agreed assumption. Hosted CI has
-+not run (see below). Gateway integration, retries/fallbacks and real-provider behavior are out of scope and were
-+not tested.
++score, so it has no margin), PHONE_NUMBER's position in the tie-break order is an agreed assumption. Only one
++hosted platform (Windows, Python 3.13.17) and one local machine have been exercised. Gateway integration,
++retries/fallbacks and real-provider behavior are out of scope and were not tested.
 +
 +## CI
 +
 +[.github/workflows/ci.yml](.github/workflows/ci.yml) defines a baseline job and a candidate job (the candidate
-+job sets `REQUIRE_CANDIDATE_TESTS=1`, fails if dependencies are absent and fails on any skipped test). **Hosted
-+CI status: PENDING** (no hosted run was executed). The same commands were run locally; see the review packet.
++job sets `REQUIRE_CANDIDATE_TESTS=1`, fails if dependencies are absent and fails on any skipped test).
++
++**Hosted CI status: passed.** [Run 42962482672](https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/runs/42962482672) on `windows-latest` (Python 3.13.17) tested commit
++`02169e0cda9d454a1985947fcd124d1ed540a14c`, and both jobs succeeded. The repository is private, so these links need
++repository access.
++
++| | Hosted run (commit `02169e0`) | Local (Windows 11, Python 3.13.7) |
++|---|---|---|
++| Baseline job / base interpreter | 132 tests run, 127 passed, **5 skipped**, 0 failed | 132 run, 128 passed, **4 skipped**, 0 failed |
++| Candidate job / candidate venv | 154 run, **0 skipped**, 0 failed | 154 run, **0 skipped**, 0 failed |
++| Deterministic rerun vs committed reports | baseline: matched (development, held-out); candidate: matched for both detectors | matched for both detectors |
++
++The baseline job skips candidate tests because Presidio is not installed there. Each of 4 skipped entries is a whole
++candidate test class; the hosted run has one more skip than the local run because its base Python has no PyYAML,
++which skips the workflow-YAML structure test (the local base interpreter has PyYAML). The skips are not candidate
++verification; the candidate job is the one that exercises them, with zero skips.
++
++An earlier run on the first commit `add4bdb` ([run 42962280122](https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/runs/42962280122)) **failed**: the runner checked files
++out with CRLF line endings, which changed the SHA-256 of the byte-verified fixtures (observed for `fixtures/development.json`: the CRLF
++form hashes to the value the runner reported), so the byte-hash integrity checks failed (baseline: 1 failure, 2 errors; candidate: 2 failures, 2 errors). The fix commit
++`02169e0` adds only `.gitattributes` (`* -text`, no line-ending conversion). No detector code, thresholds,
++fixtures, reports or tests changed, and nothing was retuned against held-out data. Later documentation-only
++commits trigger further runs; see the repository's Actions tab.
 +
 +## Repository layout
 +
@@ -1543,7 +1612,7 @@ test_threshold_is_inclusive_and_picks_highest_passing_value (tests.test_scoring.
 test_tie_break_order_is_f1_then_fewer_benign_then_higher_thresholds (tests.test_scoring.ThresholdSelection.test_tie_break_order_is_f1_then_fewer_benign_then_higher_thresholds) ... ok
 
 ----------------------------------------------------------------------
-Ran 132 tests in 3.833s
+Ran 132 tests in 3.784s
 
 OK (skipped=4)
 ````
@@ -1898,7 +1967,7 @@ test_threshold_is_inclusive_and_picks_highest_passing_value (tests.test_scoring.
 test_tie_break_order_is_f1_then_fewer_benign_then_higher_thresholds (tests.test_scoring.ThresholdSelection.test_tie_break_order_is_f1_then_fewer_benign_then_higher_thresholds) ... ok
 
 ----------------------------------------------------------------------
-Ran 154 tests in 10.403s
+Ran 154 tests in 10.484s
 
 OK
 ````
@@ -9184,8 +9253,8 @@ def recognizer_settings(analyzer: AnalyzerEngine) -> Dict[str, Any]:
 ### `.github/workflows/ci.yml`
 
 ````yaml
-# Basic CI. Status: configuration only; no hosted run has been executed (hosted CI is PENDING).
-# The same commands were run locally on Windows 11 / Python 3.13.7 (see FINAL_REVIEW_PACKET.md).
+# Basic CI. Hosted status: passed on windows-latest at commit 02169e0 (see README, CI section, for the run link).
+# The same commands were also run locally on Windows 11 / Python 3.13.7 (see FINAL_REVIEW_PACKET.md).
 name: ci
 
 on:
@@ -9879,8 +9948,14 @@ class ReadmeMatchesReports(unittest.TestCase):
 
     def test_required_documents_exist(self):
         for name in ("README.md", "WALKTHROUGH.md", "requirements-presidio.txt", "config/frozen_config.json",
-                     ".github/workflows/ci.yml", "docs/handoff/EVALUATION_CONTRACT.md"):
+                     ".github/workflows/ci.yml", "docs/handoff/EVALUATION_CONTRACT.md", ".gitattributes"):
             self.assertTrue((R / name).is_file(), name)
+        self.assertEqual((R / ".gitattributes").read_text(encoding="utf-8").splitlines()[-1], "* -text")
+        readme = (R / "README.md").read_text(encoding="utf-8")
+        self.assertIn("actions/runs/42962482672", readme)       # the passing hosted run is linked
+        self.assertIn("02169e0cda9d454a1985947fcd124d1ed540a14c", readme)  # and its tested commit named
+        self.assertNotIn("PENDING", readme)
+        self.assertNotIn("has not run", readme)
 
 
 class WorkflowKeepsItsGuarantees(unittest.TestCase):
@@ -9890,7 +9965,7 @@ class WorkflowKeepsItsGuarantees(unittest.TestCase):
     def test_structure_by_text(self):
         for needle in ("baseline:", "candidate:", 'REQUIRE_CANDIDATE_TESTS: "1"', "pip check",
                        "scripts/run_tests_no_skips.py", "requirements-presidio.txt", r"C:\pv",
-                       "scripts/check_reports.py baseline presidio", "PENDING"):
+                       "scripts/check_reports.py baseline presidio", "02169e0"):
             self.assertIn(needle, self.text)
 
     @unittest.skipUnless(importlib.util.find_spec("yaml"), "PyYAML not installed (candidate environment has it)")
@@ -11285,7 +11360,7 @@ CRLF, tabs, whitespace). Limits: 10,000 characters and 40,000 bytes, strict UTF-
 
 ## Setup, demo, evaluation (exact commands)
 
-Tested on **Windows 11, Python 3.13.7, one machine**. Other platforms are untested. Installation uses the
+Tested locally on **Windows 11, Python 3.13.7, one machine**, and on one hosted Windows runner (`windows-latest`, Python 3.13.17; see [CI](#ci)). Other platforms are untested. Installation uses the
 network (PyPI and one GitHub release asset); the tested inference path does not (see
 [Dependency notes](#dependency-notes)).
 
@@ -11459,15 +11534,36 @@ Observed on the held-out split (candidate; the baseline had none). Values are vi
 
 Tiny synthetic fixtures, three entity types, one narrow phone syntax, ASCII-shaped emails, English only, no
 statistical claims, thresholds chosen on 10 examples (the frozen phone threshold equals the recognizer's base
-score, so it has no margin), PHONE_NUMBER's position in the tie-break order is an agreed assumption. Hosted CI has
-not run (see below). Gateway integration, retries/fallbacks and real-provider behavior are out of scope and were
-not tested.
+score, so it has no margin), PHONE_NUMBER's position in the tie-break order is an agreed assumption. Only one
+hosted platform (Windows, Python 3.13.17) and one local machine have been exercised. Gateway integration,
+retries/fallbacks and real-provider behavior are out of scope and were not tested.
 
 ## CI
 
 [.github/workflows/ci.yml](.github/workflows/ci.yml) defines a baseline job and a candidate job (the candidate
-job sets `REQUIRE_CANDIDATE_TESTS=1`, fails if dependencies are absent and fails on any skipped test). **Hosted
-CI status: PENDING** (no hosted run was executed). The same commands were run locally; see the review packet.
+job sets `REQUIRE_CANDIDATE_TESTS=1`, fails if dependencies are absent and fails on any skipped test).
+
+**Hosted CI status: passed.** [Run 42962482672](https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/runs/42962482672) on `windows-latest` (Python 3.13.17) tested commit
+`02169e0cda9d454a1985947fcd124d1ed540a14c`, and both jobs succeeded. The repository is private, so these links need
+repository access.
+
+| | Hosted run (commit `02169e0`) | Local (Windows 11, Python 3.13.7) |
+|---|---|---|
+| Baseline job / base interpreter | 132 tests run, 127 passed, **5 skipped**, 0 failed | 132 run, 128 passed, **4 skipped**, 0 failed |
+| Candidate job / candidate venv | 154 run, **0 skipped**, 0 failed | 154 run, **0 skipped**, 0 failed |
+| Deterministic rerun vs committed reports | baseline: matched (development, held-out); candidate: matched for both detectors | matched for both detectors |
+
+The baseline job skips candidate tests because Presidio is not installed there. Each of 4 skipped entries is a whole
+candidate test class; the hosted run has one more skip than the local run because its base Python has no PyYAML,
+which skips the workflow-YAML structure test (the local base interpreter has PyYAML). The skips are not candidate
+verification; the candidate job is the one that exercises them, with zero skips.
+
+An earlier run on the first commit `add4bdb` ([run 42962280122](https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/runs/42962280122)) **failed**: the runner checked files
+out with CRLF line endings, which changed the SHA-256 of the byte-verified fixtures (observed for `fixtures/development.json`: the CRLF
+form hashes to the value the runner reported), so the byte-hash integrity checks failed (baseline: 1 failure, 2 errors; candidate: 2 failures, 2 errors). The fix commit
+`02169e0` adds only `.gitattributes` (`* -text`, no line-ending conversion). No detector code, thresholds,
+fixtures, reports or tests changed, and nothing was retuned against held-out data. Later documentation-only
+commits trigger further runs; see the repository's Actions tab.
 
 ## Repository layout
 
@@ -11528,7 +11624,7 @@ model or config returns a fixed code and sends nothing (no silent fallback); err
 hold only `dispatched chars=<n>` or `rejected code=<CODE>`; request IDs are synthetic and never logged.
 
 **7. What to be careful about.** Sanitized output can still contain missed fields. The data is tiny and
-synthetic. Hosted CI has not run. Gateway integration and retries/fallbacks were out of scope.
+synthetic. Hosted CI passed once on a Windows runner (see the README CI section); other platforms are untested. Gateway integration and retries/fallbacks were out of scope.
 
 ## Resume bullets (measured results only)
 
@@ -11618,6 +11714,14 @@ venv/
 .tldextract_cache/
 ````
 
+### `.gitattributes`
+
+````
+# No line-ending conversion anywhere. The fixtures, config and reports are verified by SHA-256 of their
+# exact bytes, and Windows runners default to core.autocrlf=true, which rewrites LF to CRLF on checkout.
+* -text
+````
+
 ### `tests/__init__.py`
 
 (empty file)
@@ -11641,10 +11745,11 @@ Each mutation applied to the final source made the suite fail:
 
 
 ````
-ccde76017b643ddaadb9e4f0f7fa59af8d80289c8373efc4a6cd9d0901d960ca  .github/workflows/ci.yml
+7970467c0323642c4a9b707fa165ae36af720b70d7f2cded670a2b6698e88ad0  .gitattributes
+12495f13f7b6de7306bd398257d1c166e63ea875ad2349c6339794e55095a18c  .github/workflows/ci.yml
 32d96b5ecd4fe2626a107d4f228d3b88f4a42dcf90590dee4f3301c93f548d0b  .gitignore
-507e98f6766828af3e85425d0eb3e05001ca82c49f9e77353fa410930eebb4b9  README.md
-a254bbe5f41a0c9e9054833410d8b95b5275a1714a7e7251da6d511f7738247c  WALKTHROUGH.md
+af45b4f7b411f350d837e40af017643b5a1425e33b8892d9bc60af5381134fb8  README.md
+b7a48f0d9fad968b538a157b1c689eeb32c9548884dd77ca9d5c66e04a9776f0  WALKTHROUGH.md
 1531d8b695db5f65414ee7778f4623547a7b67bd5363b9301d9cf2b20cd5eb3c  config/frozen_config.json
 329a93590ff86b544b4966f584855f973cf7aeab9e78fed83d921f0059b85b71  docs/handoff/EVALUATION_CONTRACT.md
 f2a9cd0e71b9e60fc3fb0a58f0a73e2e8fd89269f53a7f6e8b5747a28b0bc02a  docs/handoff/MANIFEST.json
@@ -11678,7 +11783,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  tests/__init__
 0ff634449fcb3ded1e09c474c9615294e022a2f7fad6abb4336ff0455f8bb5a7  tests/support.py
 afdbbcc7c8db38260b149826a2506555edd55087356a07e670345baa8ba54c66  tests/test_cli.py
 9ec97d20cee23283633e5ed9f57d993b75474b4d82d186d3c33782dec5687edf  tests/test_detectors_boundary.py
-a27bf3e90a9fe6e7f07b88eab86797c3cbf19cbee1407345539a6d5eeed7cb66  tests/test_docs.py
+4932230d8ceb46fe8cd6bb6f9daadbf98ad77dc659aee622ee0a5312d5c7df5b  tests/test_docs.py
 ad016e77a994e5ac7eda2f0ebec3d3556450fa70c5394508416363683ab19aeb  tests/test_frozen_config.py
 520b8236834fddbdf2950c0281faec0fda4f05349995d1fbc53940a0aed13176  tests/test_pipeline.py
 e9a3c9b71f391e0010252a37839e6e5a442f71602a52632d0982b57c30e6ebb8  tests/test_presidio_optional.py
@@ -11700,7 +11805,7 @@ The handoff manifest hashes for the three fixtures equal the files here: develop
 
 ## 13. Pending or out of scope (not executed)
 
-- **Hosted GitHub Actions run: PENDING.** The workflow file is untested on GitHub; its commands were run locally.
+- Hosted CI on any platform other than one `windows-latest` runner, and any matrix: not run. The push that carries this packet triggers another hosted run; its outcome is reported in the handoff message, not in this file.
 - Other operating systems / Python versions / Presidio or spaCy versions: untested.
 - Gateway integration, retries/fallbacks, real-provider requests: out of scope, not done.
 - Blinded or larger evaluation, real-world data: not done.

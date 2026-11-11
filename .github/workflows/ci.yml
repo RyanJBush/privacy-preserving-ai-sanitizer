@@ -1,5 +1,5 @@
-# Basic CI. Status: configuration only; no hosted run has been executed (hosted CI is PENDING).
-# The same commands were run locally on Windows 11 / Python 3.13.7 (see FINAL_REVIEW_PACKET.md).
+# Basic CI. Hosted status: passed on windows-latest at commit 02169e0 (see README, CI section, for the run link).
+# The same commands were also run locally on Windows 11 / Python 3.13.7 (see FINAL_REVIEW_PACKET.md).
 name: ci
 
 on:

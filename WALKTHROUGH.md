@@ -30,7 +30,7 @@ model or config returns a fixed code and sends nothing (no silent fallback); err
 hold only `dispatched chars=<n>` or `rejected code=<CODE>`; request IDs are synthetic and never logged.
 
 **7. What to be careful about.** Sanitized output can still contain missed fields. The data is tiny and
-synthetic. Hosted CI has not run. Gateway integration and retries/fallbacks were out of scope.
+synthetic. Hosted CI passed once on a Windows runner (see the README CI section); other platforms are untested. Gateway integration and retries/fallbacks were out of scope.
 
 ## Resume bullets (measured results only)
 

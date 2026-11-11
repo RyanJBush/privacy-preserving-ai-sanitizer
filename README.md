@@ -36,7 +36,7 @@ CRLF, tabs, whitespace). Limits: 10,000 characters and 40,000 bytes, strict UTF-
 
 ## Setup, demo, evaluation (exact commands)
 
-Tested on **Windows 11, Python 3.13.7, one machine**. Other platforms are untested. Installation uses the
+Tested locally on **Windows 11, Python 3.13.7, one machine**, and on one hosted Windows runner (`windows-latest`, Python 3.13.17; see [CI](#ci)). Other platforms are untested. Installation uses the
 network (PyPI and one GitHub release asset); the tested inference path does not (see
 [Dependency notes](#dependency-notes)).
 
@@ -210,15 +210,36 @@ Observed on the held-out split (candidate; the baseline had none). Values are vi
 
 Tiny synthetic fixtures, three entity types, one narrow phone syntax, ASCII-shaped emails, English only, no
 statistical claims, thresholds chosen on 10 examples (the frozen phone threshold equals the recognizer's base
-score, so it has no margin), PHONE_NUMBER's position in the tie-break order is an agreed assumption. Hosted CI has
-not run (see below). Gateway integration, retries/fallbacks and real-provider behavior are out of scope and were
-not tested.
+score, so it has no margin), PHONE_NUMBER's position in the tie-break order is an agreed assumption. Only one
+hosted platform (Windows, Python 3.13.17) and one local machine have been exercised. Gateway integration,
+retries/fallbacks and real-provider behavior are out of scope and were not tested.
 
 ## CI
 
 [.github/workflows/ci.yml](.github/workflows/ci.yml) defines a baseline job and a candidate job (the candidate
-job sets `REQUIRE_CANDIDATE_TESTS=1`, fails if dependencies are absent and fails on any skipped test). **Hosted
-CI status: PENDING** (no hosted run was executed). The same commands were run locally; see the review packet.
+job sets `REQUIRE_CANDIDATE_TESTS=1`, fails if dependencies are absent and fails on any skipped test).
+
+**Hosted CI status: passed.** [Run 42962482672](https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/runs/42962482672) on `windows-latest` (Python 3.13.17) tested commit
+`02169e0cda9d454a1985947fcd124d1ed540a14c`, and both jobs succeeded. The repository is private, so these links need
+repository access.
+
+| | Hosted run (commit `02169e0`) | Local (Windows 11, Python 3.13.7) |
+|---|---|---|
+| Baseline job / base interpreter | 132 tests run, 127 passed, **5 skipped**, 0 failed | 132 run, 128 passed, **4 skipped**, 0 failed |
+| Candidate job / candidate venv | 154 run, **0 skipped**, 0 failed | 154 run, **0 skipped**, 0 failed |
+| Deterministic rerun vs committed reports | baseline: matched (development, held-out); candidate: matched for both detectors | matched for both detectors |
+
+The baseline job skips candidate tests because Presidio is not installed there. Each of 4 skipped entries is a whole
+candidate test class; the hosted run has one more skip than the local run because its base Python has no PyYAML,
+which skips the workflow-YAML structure test (the local base interpreter has PyYAML). The skips are not candidate
+verification; the candidate job is the one that exercises them, with zero skips.
+
+An earlier run on the first commit `add4bdb` ([run 42962280122](https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/runs/42962280122)) **failed**: the runner checked files
+out with CRLF line endings, which changed the SHA-256 of the byte-verified fixtures (observed for `fixtures/development.json`: the CRLF
+form hashes to the value the runner reported), so the byte-hash integrity checks failed (baseline: 1 failure, 2 errors; candidate: 2 failures, 2 errors). The fix commit
+`02169e0` adds only `.gitattributes` (`* -text`, no line-ending conversion). No detector code, thresholds,
+fixtures, reports or tests changed, and nothing was retuned against held-out data. Later documentation-only
+commits trigger further runs; see the repository's Actions tab.
 
 ## Repository layout
 
