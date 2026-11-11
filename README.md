@@ -1,5 +1,7 @@
 # Privacy-preserving AI sanitizer (local MVP)
 
+[![CI](https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/workflows/ci.yml/badge.svg)](https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions)
+
 A small Python layer that rewrites sensitive fields in text **before** it is handed to an LLM-provider
 object. It redacts three synthetic-scope entity types and replaces each match with a placeholder such as
 `[EMAIL_ADDRESS]`:
@@ -43,6 +45,13 @@ network (PyPI and one GitHub release asset); the tested inference path does not 
 All commands below are **PowerShell** (Windows PowerShell 5.1 and PowerShell 7 both work) and are run from the
 project root. `evaluate` writes `reports/<split>_<detector>.json`; re-running it overwrites the committed report
 with identical bytes.
+
+Get the project:
+
+```powershell
+git clone https://github.com/RyanJBush/privacy-preserving-ai-sanitizer.git
+Set-Location privacy-preserving-ai-sanitizer
+```
 
 Baseline only (no installs):
 
@@ -220,8 +229,10 @@ retries/fallbacks and real-provider behavior are out of scope and were not teste
 job sets `REQUIRE_CANDIDATE_TESTS=1`, fails if dependencies are absent and fails on any skipped test).
 
 **Hosted CI status: passed.** [Run 42962482672](https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/runs/42962482672) on `windows-latest` (Python 3.13.17) tested commit
-`02169e0cda9d454a1985947fcd124d1ed540a14c`, and both jobs succeeded. The repository is private, so these links need
-repository access.
+`02169e0cda9d454a1985947fcd124d1ed540a14c`, and both jobs succeeded. The repository and its CI logs are public.
+
+Both jobs also passed on documentation commit `0c71e3acd2d37aa242126cde5e27c1f7d0d18e91`:
+[Run 42964476226](https://github.com/RyanJBush/privacy-preserving-ai-sanitizer/actions/runs/42964476226).
 
 | | Hosted run (commit `02169e0`) | Local (Windows 11, Python 3.13.7) |
 |---|---|---|
