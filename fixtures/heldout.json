@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "split": "heldout",
+  "offset_unit": "python_unicode_codepoint",
+  "examples": [
+    {
+      "id": "test-001",
+      "text": "Receipt 81 | recipient=<nora@example.org> | amount=42.50",
+      "entities": [
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 24,
+          "end": 40
+        }
+      ],
+      "expected_sanitized": "Receipt 81 | recipient=<[EMAIL_ADDRESS]> | amount=42.50"
+    },
+    {
+      "id": "test-002",
+      "text": "Escalation queue: [(703) 555-0188] after ticket CUST-200002; priority 3.",
+      "entities": [
+        {
+          "entity_type": "PHONE_NUMBER",
+          "start": 19,
+          "end": 33
+        },
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 48,
+          "end": 59
+        }
+      ],
+      "expected_sanitized": "Escalation queue: [[PHONE_NUMBER]] after ticket [CUSTOMER_ID]; priority 3."
+    },
+    {
+      "id": "test-003",
+      "text": "To: support+west@example.net\nSubject: account CUST-200003",
+      "entities": [
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 4,
+          "end": 28
+        },
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 46,
+          "end": 57
+        }
+      ],
+      "expected_sanitized": "To: [EMAIL_ADDRESS]\nSubject: account [CUSTOMER_ID]"
+    },
+    {
+      "id": "test-004",
+      "text": "配送 😀 — CUST-200004 → mei@example.com; café total 19.",
+      "entities": [
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 7,
+          "end": 18
+        },
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 21,
+          "end": 36
+        }
+      ],
+      "expected_sanitized": "配送 😀 — [CUSTOMER_ID] → [EMAIL_ADDRESS]; café total 19."
+    },
+    {
+      "id": "test-005",
+      "text": "Routing key \"CUST-200005@example.org\" belongs in slot 7.",
+      "entities": [
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 13,
+          "end": 36
+        }
+      ],
+      "expected_sanitized": "Routing key \"[EMAIL_ADDRESS]\" belongs in slot 7."
+    },
+    {
+      "id": "test-006",
+      "text": "Retry contacts: iris@example.com | iris@example.com | (212) 555-0191 | (212) 555-0191.",
+      "entities": [
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 16,
+          "end": 32
+        },
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 35,
+          "end": 51
+        },
+        {
+          "entity_type": "PHONE_NUMBER",
+          "start": 54,
+          "end": 68
+        },
+        {
+          "entity_type": "PHONE_NUMBER",
+          "start": 71,
+          "end": 85
+        }
+      ],
+      "expected_sanitized": "Retry contacts: [EMAIL_ADDRESS] | [EMAIL_ADDRESS] | [PHONE_NUMBER] | [PHONE_NUMBER]."
+    },
+    {
+      "id": "test-007",
+      "text": "Snapshot=v2.3.4; units=108; ratio=0.75; date=2026-11-10; no contacts.",
+      "entities": [],
+      "expected_sanitized": "Snapshot=v2.3.4; units=108; ratio=0.75; date=2026-11-10; no contacts."
+    },
+    {
+      "id": "test-008",
+      "text": "Bad keys: cust-200008, CUST-20008, CUST-2000089, XCUST-200008, CUST-200008_x.",
+      "entities": [],
+      "expected_sanitized": "Bad keys: cust-200008, CUST-20008, CUST-2000089, XCUST-200008, CUST-200008_x."
+    },
+    {
+      "id": "test-009",
+      "text": "Format examples only: 202-555-0199 / (202)555-0199 / (202)  555-0199 / (102) 555-0199 / (202) 155-0199.",
+      "entities": [],
+      "expected_sanitized": "Format examples only: 202-555-0199 / (202)555-0199 / (202)  555-0199 / (102) 555-0199 / (202) 155-0199."
+    },
+    {
+      "id": "test-010",
+      "text": "Audit destination audit@records.invalid; batch 64 closed.",
+      "entities": [
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 18,
+          "end": 39
+        }
+      ],
+      "expected_sanitized": "Audit destination [EMAIL_ADDRESS]; batch 64 closed."
+    },
+    {
+      "id": "test-011",
+      "text": "Window{(202) 555-0176}; ref(CUST-200011); mailbox<jules@dept.example.com>.",
+      "entities": [
+        {
+          "entity_type": "PHONE_NUMBER",
+          "start": 7,
+          "end": 21
+        },
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 28,
+          "end": 39
+        },
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 50,
+          "end": 72
+        }
+      ],
+      "expected_sanitized": "Window{[PHONE_NUMBER]}; ref([CUSTOMER_ID]); mailbox<[EMAIL_ADDRESS]>."
+    },
+    {
+      "id": "test-012",
+      "text": "\tArchive\r\nkey=CUST-200012\r\nmail=qa_team@example.org\r\n",
+      "entities": [
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 14,
+          "end": 25
+        },
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 32,
+          "end": 51
+        }
+      ],
+      "expected_sanitized": "\tArchive\r\nkey=[CUSTOMER_ID]\r\nmail=[EMAIL_ADDRESS]\r\n"
+    },
+    {
+      "id": "test-013",
+      "text": "first.last@example.net,CUST-200013;(301) 555-0102",
+      "entities": [
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 0,
+          "end": 22
+        },
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 23,
+          "end": 34
+        },
+        {
+          "entity_type": "PHONE_NUMBER",
+          "start": 35,
+          "end": 49
+        }
+      ],
+      "expected_sanitized": "[EMAIL_ADDRESS],[CUSTOMER_ID];[PHONE_NUMBER]"
+    },
+    {
+      "id": "test-014",
+      "text": "Reference pair: CUST-200014 / CUST-200014; retained counter 14.",
+      "entities": [
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 16,
+          "end": 27
+        },
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 30,
+          "end": 41
+        }
+      ],
+      "expected_sanitized": "Reference pair: [CUSTOMER_ID] / [CUSTOMER_ID]; retained counter 14."
+    },
+    {
+      "id": "test-015",
+      "text": "Decomposed café precedes renee@example.com; dial (415) 555-0160.",
+      "entities": [
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 26,
+          "end": 43
+        },
+        {
+          "entity_type": "PHONE_NUMBER",
+          "start": 50,
+          "end": 64
+        }
+      ],
+      "expected_sanitized": "Decomposed café precedes [EMAIL_ADDRESS]; dial [PHONE_NUMBER]."
+    },
+    {
+      "id": "test-016",
+      "text": "",
+      "entities": [],
+      "expected_sanitized": ""
+    },
+    {
+      "id": "test-017",
+      "text": "Footer v8: operations 24×7; temperatures −5, 0, 19; symbol Ω; tabs\tstay.",
+      "entities": [],
+      "expected_sanitized": "Footer v8: operations 24×7; temperatures −5, 0, 19; symbol Ω; tabs\tstay."
+    },
+    {
+      "id": "test-018",
+      "text": "Callback card:\n  primary (240) 555-0139\n  secondary (703) 555-0125\n  alias ops@unit.example.net",
+      "entities": [
+        {
+          "entity_type": "PHONE_NUMBER",
+          "start": 25,
+          "end": 39
+        },
+        {
+          "entity_type": "PHONE_NUMBER",
+          "start": 52,
+          "end": 66
+        },
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 75,
+          "end": 95
+        }
+      ],
+      "expected_sanitized": "Callback card:\n  primary [PHONE_NUMBER]\n  secondary [PHONE_NUMBER]\n  alias [EMAIL_ADDRESS]"
+    }
+  ]
+}

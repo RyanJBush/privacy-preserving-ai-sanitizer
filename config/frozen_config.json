@@ -1,0 +1,1693 @@
+{
+  "baseline": {
+    "score": 1.0,
+    "thresholds": {
+      "CUSTOMER_ID": 1.0,
+      "EMAIL_ADDRESS": 1.0,
+      "PHONE_NUMBER": 1.0
+    }
+  },
+  "config_version": 1,
+  "detector": "presidio",
+  "development_metrics_at_selected_thresholds": {
+    "benign": {
+      "benign_characters_removed": 0,
+      "replacements_touching_benign": 0,
+      "replacements_touching_no_gold": 0
+    },
+    "coverage": {
+      "overall": {
+        "coverage_rate": 0.9375,
+        "full": 15,
+        "gold": 16,
+        "partial": 0,
+        "untouched": 1
+      },
+      "per_type": {
+        "CUSTOMER_ID": {
+          "coverage_rate": 1.0,
+          "full": 5,
+          "gold": 5,
+          "partial": 0,
+          "untouched": 0
+        },
+        "EMAIL_ADDRESS": {
+          "coverage_rate": 0.8571428571428571,
+          "full": 6,
+          "gold": 7,
+          "partial": 0,
+          "untouched": 1
+        },
+        "PHONE_NUMBER": {
+          "coverage_rate": 1.0,
+          "full": 4,
+          "gold": 4,
+          "partial": 0,
+          "untouched": 0
+        }
+      }
+    },
+    "micro": {
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.9375,
+      "tp": 15
+    },
+    "per_type": {
+      "CUSTOMER_ID": {
+        "f1": 1.0,
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tp": 5
+      },
+      "EMAIL_ADDRESS": {
+        "f1": 0.9230769230769231,
+        "fn": 1,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 0.8571428571428571,
+        "tp": 6
+      },
+      "PHONE_NUMBER": {
+        "f1": 1.0,
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tp": 4
+      }
+    }
+  },
+  "development_sha256": "050aab48f30e09d9736f4e3b637d5b67175cb1a8a5e5af59607092b62b7cc172",
+  "freeze_kind": "procedural freeze of the development configuration; not a blinded external evaluation",
+  "heldout_access": "heldout.json was hashed as raw bytes only; its contents were not parsed or read before this file was written",
+  "heldout_sha256": "ce66e9a9dd74935a50f58c7252e50177702470676ebe7c98a060e8f0f3b38dc2",
+  "model_wheel_sha256": "1932429db727d4bff3deed6b34cfc05df17794f4a52eeb26cf8928f7c1a0fb85",
+  "packages": {
+    "en-core-web-sm": "3.8.0",
+    "phonenumbers": "9.0.43",
+    "presidio-analyzer": "2.2.366",
+    "regex": "2026.11.9",
+    "spacy": "3.8.18",
+    "tldextract": "5.4.0"
+  },
+  "python": "3.13.7",
+  "recognizer_settings": {
+    "analyze_entities": [
+      "EMAIL_ADDRESS",
+      "PHONE_NUMBER",
+      "CUSTOMER_ID"
+    ],
+    "context_enhancer": "LemmaContextAwareEnhancer",
+    "email_validator": "offline tldextract snapshot (suffix_list_urls=(), cache_dir=None)",
+    "engine_default_score_threshold": 0,
+    "ner_recognizer_registered": false,
+    "nlp_engine": "SpacyNlpEngine",
+    "presidio_logger_level": "INFO (process-wide setting made in build_analyzer)",
+    "recognizers": [
+      {
+        "class": "OfflineEmailRecognizer",
+        "entities": [
+          "EMAIL_ADDRESS"
+        ],
+        "name": "OfflineEmailRecognizer",
+        "patterns": [
+          {
+            "name": "Email (Medium)",
+            "regex": "\\b((([!#$%&'*+\\-/=?^_`{|}~\\w])|([!#$%&'*+\\-/=?^_`{|}~\\w][!#$%&'*+\\-/=?^_`{|}~\\.\\w]{0,}[!#$%&'*+\\-/=?^_`{|}~\\w]))[@]\\w+(?:-+\\w+)*(?:\\.\\w+(?:-+\\w+)*)+)\\b",
+            "score": 0.5
+          }
+        ],
+        "regex_flags": "regex.I|M|S"
+      },
+      {
+        "base_score": 0.4,
+        "class": "PhoneRecognizer",
+        "entities": [
+          "PHONE_NUMBER"
+        ],
+        "leniency": 1,
+        "name": "PhoneRecognizer",
+        "supported_regions": [
+          "US"
+        ]
+      },
+      {
+        "class": "PatternRecognizer",
+        "entities": [
+          "CUSTOMER_ID"
+        ],
+        "name": "CustomerIdRecognizer",
+        "patterns": [
+          {
+            "name": "customer-id",
+            "regex": "(?<![A-Za-z0-9_])CUST-[0-9]{6}(?![A-Za-z0-9_])",
+            "score": 1.0
+          }
+        ],
+        "regex_flags": "regex.M|S"
+      }
+    ],
+    "spacy_model": "en_core_web_sm",
+    "spacy_pipeline": [
+      "tok2vec",
+      "tagger",
+      "parser",
+      "attribute_ruler",
+      "lemmatizer",
+      "ner"
+    ]
+  },
+  "resolution_policy": "decreasing length, decreasing score, type order EMAIL_ADDRESS>PHONE_NUMBER>CUSTOMER_ID, earlier start; keep non-overlapping; replace right to left with [TYPE]",
+  "scope": {
+    "CUSTOMER_ID_regex": "(?<![A-Za-z0-9_])CUST-[0-9]{6}(?![A-Za-z0-9_])",
+    "PHONE_NUMBER_scope_regex": "(?<![A-Za-z0-9_])\\([2-9][0-9]{2}\\) [2-9][0-9]{2}-[0-9]{4}(?![A-Za-z0-9_])",
+    "entities": [
+      "EMAIL_ADDRESS",
+      "PHONE_NUMBER",
+      "CUSTOMER_ID"
+    ],
+    "phone_gate": "after validation, a PHONE_NUMBER candidate is kept only if its exact (start,end) is a match of the scope regex on the original text; never repaired, trimmed or synthesized"
+  },
+  "selection_grid": [
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.0,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.4,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.6,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 0.8,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.0
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.4
+      },
+      "tp": 15
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.896551724137931,
+      "fn": 3,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.6
+      },
+      "tp": 13
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 0.8
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.0,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.4,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.6,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 0.8,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    },
+    {
+      "benign_characters_removed": 0,
+      "f1": 0.8148148148148148,
+      "fn": 5,
+      "fp": 0,
+      "thresholds": {
+        "CUSTOMER_ID": 1.0,
+        "EMAIL_ADDRESS": 1.0,
+        "PHONE_NUMBER": 1.0
+      },
+      "tp": 11
+    }
+  ],
+  "selection_grid_size": 125,
+  "selection_rule": "Candidate thresholds from {0.0,0.4,0.6,0.8,1.0}^3 evaluated on development.json only, using cached raw candidates through the full shared pipeline (validate all, phone scope gate, score >= threshold, dedupe, overlap resolution). Choose the highest development exact-span micro F1; ties -> fewer benign characters removed; then lexicographically higher thresholds in EMAIL_ADDRESS, PHONE_NUMBER, CUSTOMER_ID order.",
+  "selection_tied_at_top_after_benign_rule": 50,
+  "threshold_grid": [
+    0.0,
+    0.4,
+    0.6,
+    0.8,
+    1.0
+  ],
+  "thresholds": {
+    "CUSTOMER_ID": 1.0,
+    "EMAIL_ADDRESS": 1.0,
+    "PHONE_NUMBER": 0.4
+  }
+}

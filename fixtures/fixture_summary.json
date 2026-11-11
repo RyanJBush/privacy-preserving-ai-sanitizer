@@ -1,0 +1,18 @@
+{
+  "development": {
+    "examples": 10,
+    "gold_entities": {
+      "EMAIL_ADDRESS": 7,
+      "PHONE_NUMBER": 4,
+      "CUSTOMER_ID": 5
+    }
+  },
+  "heldout": {
+    "examples": 18,
+    "gold_entities": {
+      "EMAIL_ADDRESS": 12,
+      "PHONE_NUMBER": 8,
+      "CUSTOMER_ID": 8
+    }
+  }
+}

@@ -1,0 +1,47 @@
+# Basic CI. Status: configuration only; no hosted run has been executed (hosted CI is PENDING).
+# The same commands were run locally on Windows 11 / Python 3.13.7 (see FINAL_REVIEW_PACKET.md).
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  baseline:
+    name: baseline (stdlib only)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Unit tests (candidate tests skip here because Presidio is not installed)
+        run: python -m unittest discover -v
+      - name: Deterministic baseline evaluation rerun matches committed reports
+        run: python scripts/check_reports.py baseline
+      - name: Synthetic demo (baseline)
+        run: python -m sanitizer demo --detector baseline
+
+  candidate:
+    name: candidate (Presidio + en_core_web_sm)
+    runs-on: windows-latest
+    env:
+      REQUIRE_CANDIDATE_TESTS: "1"   # missing dependencies FAIL instead of skipping
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      # Short venv path: a deep path made spaCy fail to load a DLL on Windows.
+      - name: Create venv at a short path
+        run: python -m venv C:\pv
+      - name: Install pinned dependencies and the model wheel (uses the network)
+        run: C:\pv\Scripts\python -m pip install -r requirements-presidio.txt
+      - name: pip check
+        run: C:\pv\Scripts\python -m pip check
+      - name: Full suite; any skipped test fails the job
+        run: C:\pv\Scripts\python scripts/run_tests_no_skips.py
+      - name: Deterministic evaluation rerun matches committed reports (both detectors)
+        run: C:\pv\Scripts\python scripts/check_reports.py baseline presidio
+      - name: Synthetic demo (candidate)
+        run: C:\pv\Scripts\python -m sanitizer demo --detector presidio

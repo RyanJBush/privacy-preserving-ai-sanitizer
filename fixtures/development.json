@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "split": "development",
+  "offset_unit": "python_unicode_codepoint",
+  "examples": [
+    {
+      "id": "dev-001",
+      "text": "Email ava@example.com; customer CUST-004271; quantity 24.",
+      "entities": [
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 6,
+          "end": 21
+        },
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 32,
+          "end": 43
+        }
+      ],
+      "expected_sanitized": "Email [EMAIL_ADDRESS]; customer [CUSTOMER_ID]; quantity 24."
+    },
+    {
+      "id": "dev-002",
+      "text": "Call (202) 555-0147 about CUST-100002.",
+      "entities": [
+        {
+          "entity_type": "PHONE_NUMBER",
+          "start": 5,
+          "end": 19
+        },
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 26,
+          "end": 37
+        }
+      ],
+      "expected_sanitized": "Call [PHONE_NUMBER] about [CUSTOMER_ID]."
+    },
+    {
+      "id": "dev-003",
+      "text": "Copy maya+lab@example.org and maya+lab@example.org; 2 copies.",
+      "entities": [
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 5,
+          "end": 25
+        },
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 30,
+          "end": 50
+        }
+      ],
+      "expected_sanitized": "Copy [EMAIL_ADDRESS] and [EMAIL_ADDRESS]; 2 copies."
+    },
+    {
+      "id": "dev-004",
+      "text": "🔒 Café: leo@example.net / CUST-100004.",
+      "entities": [
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 8,
+          "end": 23
+        },
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 26,
+          "end": 37
+        }
+      ],
+      "expected_sanitized": "🔒 Café: [EMAIL_ADDRESS] / [CUSTOMER_ID]."
+    },
+    {
+      "id": "dev-005",
+      "text": "Owner CUST-100005@example.com; telephone (415) 555-0123.",
+      "entities": [
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 6,
+          "end": 29
+        },
+        {
+          "entity_type": "PHONE_NUMBER",
+          "start": 41,
+          "end": 55
+        }
+      ],
+      "expected_sanitized": "Owner [EMAIL_ADDRESS]; telephone [PHONE_NUMBER]."
+    },
+    {
+      "id": "dev-006",
+      "text": "Units 24; year 2026; code cust-100006; token XCUST-100006; short CUST-10006.",
+      "entities": [],
+      "expected_sanitized": "Units 24; year 2026; code cust-100006; token XCUST-100006; short CUST-10006."
+    },
+    {
+      "id": "dev-007",
+      "text": "Use CUST-100007,team@example.com; fax (301) 555-0108!",
+      "entities": [
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 4,
+          "end": 15
+        },
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 16,
+          "end": 32
+        },
+        {
+          "entity_type": "PHONE_NUMBER",
+          "start": 38,
+          "end": 52
+        }
+      ],
+      "expected_sanitized": "Use [CUSTOMER_ID],[EMAIL_ADDRESS]; fax [PHONE_NUMBER]!"
+    },
+    {
+      "id": "dev-008",
+      "text": "Email dev@training.invalid. Unsupported phone 202-555-0147 is outside the selected format.",
+      "entities": [
+        {
+          "entity_type": "EMAIL_ADDRESS",
+          "start": 6,
+          "end": 26
+        }
+      ],
+      "expected_sanitized": "Email [EMAIL_ADDRESS]. Unsupported phone 202-555-0147 is outside the selected format."
+    },
+    {
+      "id": "dev-009",
+      "text": "Line A\r\nPhone (240) 555-0111\r\nReference CUST-100009\tend.",
+      "entities": [
+        {
+          "entity_type": "PHONE_NUMBER",
+          "start": 14,
+          "end": 28
+        },
+        {
+          "entity_type": "CUSTOMER_ID",
+          "start": 40,
+          "end": 51
+        }
+      ],
+      "expected_sanitized": "Line A\r\nPhone [PHONE_NUMBER]\r\nReference [CUSTOMER_ID]\tend."
+    },
+    {
+      "id": "dev-010",
+      "text": "",
+      "entities": [],
+      "expected_sanitized": ""
+    }
+  ]
+}

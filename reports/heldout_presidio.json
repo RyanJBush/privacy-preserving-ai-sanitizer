@@ -1,0 +1,1072 @@
+{
+  "benign": {
+    "benign_characters_removed": 5,
+    "replacements_touching_benign": 1,
+    "replacements_touching_no_gold": 0
+  },
+  "coverage": {
+    "overall": {
+      "coverage_rate": 0.9642857142857143,
+      "full": 27,
+      "gold": 28,
+      "partial": 0,
+      "untouched": 1
+    },
+    "per_type": {
+      "CUSTOMER_ID": {
+        "coverage_rate": 1.0,
+        "full": 8,
+        "gold": 8,
+        "partial": 0,
+        "untouched": 0
+      },
+      "EMAIL_ADDRESS": {
+        "coverage_rate": 0.9166666666666666,
+        "full": 11,
+        "gold": 12,
+        "partial": 0,
+        "untouched": 1
+      },
+      "PHONE_NUMBER": {
+        "coverage_rate": 1.0,
+        "full": 8,
+        "gold": 8,
+        "partial": 0,
+        "untouched": 0
+      }
+    }
+  },
+  "examples": [
+    {
+      "applied": [
+        {
+          "end": 40,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "score": 1.0,
+          "start": 24,
+          "touches_benign": false,
+          "touches_no_gold": false
+        }
+      ],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 40,
+          "entity_type": "EMAIL_ADDRESS",
+          "score": 1.0,
+          "start": 24
+        }
+      ],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "full",
+          "end": 40,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "start": 24
+        }
+      ],
+      "id": "test-001",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [
+        {
+          "end": 33,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "score": 0.4,
+          "start": 19,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 59,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "score": 1.0,
+          "start": 48,
+          "touches_benign": false,
+          "touches_no_gold": false
+        }
+      ],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 59,
+          "entity_type": "CUSTOMER_ID",
+          "score": 1.0,
+          "start": 48
+        },
+        {
+          "end": 33,
+          "entity_type": "PHONE_NUMBER",
+          "score": 0.4,
+          "start": 19
+        }
+      ],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "full",
+          "end": 33,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "start": 19
+        },
+        {
+          "coverage": "full",
+          "end": 59,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "start": 48
+        }
+      ],
+      "id": "test-002",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [
+        {
+          "end": 28,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "score": 1.0,
+          "start": 4,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 57,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "score": 1.0,
+          "start": 46,
+          "touches_benign": false,
+          "touches_no_gold": false
+        }
+      ],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 28,
+          "entity_type": "EMAIL_ADDRESS",
+          "score": 1.0,
+          "start": 4
+        },
+        {
+          "end": 57,
+          "entity_type": "CUSTOMER_ID",
+          "score": 1.0,
+          "start": 46
+        }
+      ],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "full",
+          "end": 28,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "start": 4
+        },
+        {
+          "coverage": "full",
+          "end": 57,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "start": 46
+        }
+      ],
+      "id": "test-003",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [
+        {
+          "end": 18,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "score": 1.0,
+          "start": 7,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 36,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "score": 1.0,
+          "start": 21,
+          "touches_benign": false,
+          "touches_no_gold": false
+        }
+      ],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 18,
+          "entity_type": "CUSTOMER_ID",
+          "score": 1.0,
+          "start": 7
+        },
+        {
+          "end": 36,
+          "entity_type": "EMAIL_ADDRESS",
+          "score": 1.0,
+          "start": 21
+        }
+      ],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "full",
+          "end": 18,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "start": 7
+        },
+        {
+          "coverage": "full",
+          "end": 36,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "start": 21
+        }
+      ],
+      "id": "test-004",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [
+        {
+          "end": 36,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "score": 1.0,
+          "start": 13,
+          "touches_benign": false,
+          "touches_no_gold": false
+        }
+      ],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 36,
+          "entity_type": "EMAIL_ADDRESS",
+          "score": 1.0,
+          "start": 13
+        },
+        {
+          "end": 24,
+          "entity_type": "CUSTOMER_ID",
+          "score": 1.0,
+          "start": 13
+        }
+      ],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "full",
+          "end": 36,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "start": 13
+        }
+      ],
+      "id": "test-005",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [
+        {
+          "end": 32,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "score": 1.0,
+          "start": 16,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 51,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "score": 1.0,
+          "start": 35,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 68,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "score": 0.4,
+          "start": 54,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 85,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "score": 0.4,
+          "start": 71,
+          "touches_benign": false,
+          "touches_no_gold": false
+        }
+      ],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 32,
+          "entity_type": "EMAIL_ADDRESS",
+          "score": 1.0,
+          "start": 16
+        },
+        {
+          "end": 51,
+          "entity_type": "EMAIL_ADDRESS",
+          "score": 1.0,
+          "start": 35
+        },
+        {
+          "end": 68,
+          "entity_type": "PHONE_NUMBER",
+          "score": 0.4,
+          "start": 54
+        },
+        {
+          "end": 85,
+          "entity_type": "PHONE_NUMBER",
+          "score": 0.4,
+          "start": 71
+        }
+      ],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "full",
+          "end": 32,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "start": 16
+        },
+        {
+          "coverage": "full",
+          "end": 51,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "start": 35
+        },
+        {
+          "coverage": "full",
+          "end": 68,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "start": 54
+        },
+        {
+          "coverage": "full",
+          "end": 85,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "start": 71
+        }
+      ],
+      "id": "test-006",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [],
+      "id": "test-007",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": true,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [],
+      "id": "test-008",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": true,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 34,
+          "entity_type": "PHONE_NUMBER",
+          "score": 0.4,
+          "start": 22
+        },
+        {
+          "end": 50,
+          "entity_type": "PHONE_NUMBER",
+          "score": 0.4,
+          "start": 37
+        },
+        {
+          "end": 68,
+          "entity_type": "PHONE_NUMBER",
+          "score": 0.4,
+          "start": 53
+        }
+      ],
+      "dropped_by_scope": 3,
+      "dropped_by_threshold": 0,
+      "gold": [],
+      "id": "test-009",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": true,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "untouched",
+          "end": 39,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "FN",
+          "start": 18
+        }
+      ],
+      "id": "test-010",
+      "matches_expected_sanitized": false,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [
+        {
+          "end": 21,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "score": 0.4,
+          "start": 7,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 39,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "score": 1.0,
+          "start": 28,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 72,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "score": 1.0,
+          "start": 50,
+          "touches_benign": false,
+          "touches_no_gold": false
+        }
+      ],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 39,
+          "entity_type": "CUSTOMER_ID",
+          "score": 1.0,
+          "start": 28
+        },
+        {
+          "end": 72,
+          "entity_type": "EMAIL_ADDRESS",
+          "score": 1.0,
+          "start": 50
+        },
+        {
+          "end": 21,
+          "entity_type": "PHONE_NUMBER",
+          "score": 0.4,
+          "start": 7
+        }
+      ],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "full",
+          "end": 21,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "start": 7
+        },
+        {
+          "coverage": "full",
+          "end": 39,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "start": 28
+        },
+        {
+          "coverage": "full",
+          "end": 72,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "start": 50
+        }
+      ],
+      "id": "test-011",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [
+        {
+          "end": 25,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "score": 1.0,
+          "start": 14,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 51,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "FP",
+          "score": 1.0,
+          "start": 27,
+          "touches_benign": true,
+          "touches_no_gold": false
+        }
+      ],
+      "benign_characters_removed": 5,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 25,
+          "entity_type": "CUSTOMER_ID",
+          "score": 1.0,
+          "start": 14
+        },
+        {
+          "end": 51,
+          "entity_type": "EMAIL_ADDRESS",
+          "score": 1.0,
+          "start": 27
+        }
+      ],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "full",
+          "end": 25,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "start": 14
+        },
+        {
+          "coverage": "full",
+          "end": 51,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "FN",
+          "start": 32
+        }
+      ],
+      "id": "test-012",
+      "matches_expected_sanitized": false,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [
+        {
+          "end": 22,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "score": 1.0,
+          "start": 0,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 34,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "score": 1.0,
+          "start": 23,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 49,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "score": 0.4,
+          "start": 35,
+          "touches_benign": false,
+          "touches_no_gold": false
+        }
+      ],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 22,
+          "entity_type": "EMAIL_ADDRESS",
+          "score": 1.0,
+          "start": 0
+        },
+        {
+          "end": 34,
+          "entity_type": "CUSTOMER_ID",
+          "score": 1.0,
+          "start": 23
+        },
+        {
+          "end": 49,
+          "entity_type": "PHONE_NUMBER",
+          "score": 0.4,
+          "start": 35
+        }
+      ],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "full",
+          "end": 22,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "start": 0
+        },
+        {
+          "coverage": "full",
+          "end": 34,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "start": 23
+        },
+        {
+          "coverage": "full",
+          "end": 49,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "start": 35
+        }
+      ],
+      "id": "test-013",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [
+        {
+          "end": 27,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "score": 1.0,
+          "start": 16,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 41,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "score": 1.0,
+          "start": 30,
+          "touches_benign": false,
+          "touches_no_gold": false
+        }
+      ],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 27,
+          "entity_type": "CUSTOMER_ID",
+          "score": 1.0,
+          "start": 16
+        },
+        {
+          "end": 41,
+          "entity_type": "CUSTOMER_ID",
+          "score": 1.0,
+          "start": 30
+        }
+      ],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "full",
+          "end": 27,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "start": 16
+        },
+        {
+          "coverage": "full",
+          "end": 41,
+          "entity_type": "CUSTOMER_ID",
+          "result": "TP",
+          "start": 30
+        }
+      ],
+      "id": "test-014",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [
+        {
+          "end": 43,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "score": 1.0,
+          "start": 26,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 64,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "score": 0.4,
+          "start": 50,
+          "touches_benign": false,
+          "touches_no_gold": false
+        }
+      ],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 43,
+          "entity_type": "EMAIL_ADDRESS",
+          "score": 1.0,
+          "start": 26
+        },
+        {
+          "end": 64,
+          "entity_type": "PHONE_NUMBER",
+          "score": 0.4,
+          "start": 50
+        }
+      ],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "full",
+          "end": 43,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "start": 26
+        },
+        {
+          "coverage": "full",
+          "end": 64,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "start": 50
+        }
+      ],
+      "id": "test-015",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [],
+      "id": "test-016",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": true,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [],
+      "id": "test-017",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": true,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    },
+    {
+      "applied": [
+        {
+          "end": 39,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "score": 0.75,
+          "start": 25,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 66,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "score": 0.4,
+          "start": 52,
+          "touches_benign": false,
+          "touches_no_gold": false
+        },
+        {
+          "end": 95,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "score": 1.0,
+          "start": 75,
+          "touches_benign": false,
+          "touches_no_gold": false
+        }
+      ],
+      "benign_characters_removed": 0,
+      "diagnostic_pre_resolution_validated_candidates": [
+        {
+          "end": 95,
+          "entity_type": "EMAIL_ADDRESS",
+          "score": 1.0,
+          "start": 75
+        },
+        {
+          "end": 39,
+          "entity_type": "PHONE_NUMBER",
+          "score": 0.75,
+          "start": 25
+        },
+        {
+          "end": 66,
+          "entity_type": "PHONE_NUMBER",
+          "score": 0.4,
+          "start": 52
+        }
+      ],
+      "dropped_by_scope": 0,
+      "dropped_by_threshold": 0,
+      "gold": [
+        {
+          "coverage": "full",
+          "end": 39,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "start": 25
+        },
+        {
+          "coverage": "full",
+          "end": 66,
+          "entity_type": "PHONE_NUMBER",
+          "result": "TP",
+          "start": 52
+        },
+        {
+          "coverage": "full",
+          "end": 95,
+          "entity_type": "EMAIL_ADDRESS",
+          "result": "TP",
+          "start": 75
+        }
+      ],
+      "id": "test-018",
+      "matches_expected_sanitized": true,
+      "no_gold_preserved": null,
+      "payload_equals_actual_sanitized": true,
+      "payload_exact_request_id_text_only": true,
+      "provider_calls": 1,
+      "reconstruction_from_applied_spans_equals_output": true,
+      "status": "ok"
+    }
+  ],
+  "meta": {
+    "detector": "presidio",
+    "fixture_sha256": "ce66e9a9dd74935a50f58c7252e50177702470676ebe7c98a060e8f0f3b38dc2",
+    "frozen_config_sha256": "1531d8b695db5f65414ee7778f4623547a7b67bd5363b9301d9cf2b20cd5eb3c",
+    "packages": {
+      "en-core-web-sm": "3.8.0",
+      "phonenumbers": "9.0.43",
+      "presidio-analyzer": "2.2.366",
+      "regex": "2026.11.9",
+      "spacy": "3.8.18",
+      "tldextract": "5.4.0"
+    },
+    "python": "3.13.7",
+    "resolution_policy": "validate all spans; phone scope gate; type thresholds (score >= t); dedupe same type/range keeping highest score; overlap resolution by length, score, type order EMAIL_ADDRESS>PHONE_NUMBER>CUSTOMER_ID, earlier start; replace right to left",
+    "split": "heldout",
+    "status": "procedural freeze of the development configuration; not a blinded external evaluation",
+    "thresholds": {
+      "CUSTOMER_ID": 1.0,
+      "EMAIL_ADDRESS": 1.0,
+      "PHONE_NUMBER": 0.4
+    }
+  },
+  "metrics": {
+    "micro": {
+      "f1": 0.9454545454545454,
+      "fn": 2,
+      "fp": 1,
+      "precision": 0.9629629629629629,
+      "recall": 0.9285714285714286,
+      "tp": 26
+    },
+    "per_type": {
+      "CUSTOMER_ID": {
+        "f1": 1.0,
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tp": 8
+      },
+      "EMAIL_ADDRESS": {
+        "f1": 0.8695652173913043,
+        "fn": 2,
+        "fp": 1,
+        "precision": 0.9090909090909091,
+        "recall": 0.8333333333333334,
+        "tp": 10
+      },
+      "PHONE_NUMBER": {
+        "f1": 1.0,
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tp": 8
+      }
+    }
+  },
+  "notes": [
+    "Primary metrics score the spans actually applied after validation, scope gate, thresholds, dedupe and overlap resolution.",
+    "diagnostic_pre_resolution_validated_candidates is a separate diagnostic and is not used for the metrics.",
+    "Provider-boundary counts are separate from accuracy: a detector miss is an accuracy/coverage failure, not a boundary failure.",
+    "Small synthetic template split; not evidence of real-world performance."
+  ],
+  "preservation": {
+    "examples_equal_expected_sanitized": 16,
+    "examples_failed_with_fixed_code": 0,
+    "examples_total": 18,
+    "examples_with_no_gold": 5,
+    "no_gold_examples_preserved": 5
+  },
+  "provider_boundary": {
+    "examples_dispatched": 18,
+    "payload_equals_actual_sanitized": 18,
+    "payload_exact_request_id_text_only": 18,
+    "provider_calls_total": 18,
+    "reconstruction_from_applied_spans_equals_output": 18,
+    "zero_calls_on_failure": 0
+  },
+  "report_version": 1
+}
