@@ -1,0 +1,3 @@
+# No line-ending conversion anywhere. The fixtures, config and reports are verified by SHA-256 of their
+# exact bytes, and Windows runners default to core.autocrlf=true, which rewrites LF to CRLF on checkout.
+* -text
